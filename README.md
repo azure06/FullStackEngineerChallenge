@@ -1,38 +1,99 @@
-# Full Stack Developer Challenge
-This is an interview challengs. Please feel free to fork. Pull Requests will be ignored.
+# Getting Started
 
-## Requirements
-Design a web application that allows employees to submit feedback toward each other's performance review.
+If you it's your first time run this project, run the following command from the route directory to install the dependencies
 
-*Partial solutions are acceptable.*  It is not necessary to submit a complete solution that implements every requirement.
+```sh
+npm run prestart
+```
 
-### Admin view
-* Add/remove/update/view employees
-* Add/update/view performance reviews
-* Assign employees to participate in another employee's performance review
+It will perform `npm install` in the route directory and in `./src/express` .
 
-### Employee view
-* List of performance reviews requiring feedback
-* Submit feedback
+Once the installation is done make sure that the ports `3000` and `8080` and available and start the development servers with
 
-## Challenge Scope
-* High level description of design and technologies used
-* Server side API (using a programming language and/or framework of your choice)
-  * Implementation of at least 3 API calls
-  * Most full stack web developers at PayPay currently use Java, Ruby on Rails, or Node.js on the server(with MySQL for the database), but feel free to use other tech if you prefer
-* Web app
-  * Implementation of 2-5 web pages using a modern web framework (e.g. React or Angular) that talks to server side
-    * This should integrate with your API, but it's fine to use static responses for some of it 
-* Document all assumptions made
-* Complete solutions aren't required, but what you do submit needs to run.
+```sh
+npm run dev
+```
 
-## How to complete this challenge
-* Fork this repo in github
-* Complete the design and code as defined to the best of your abilities
-* Place notes in your code to help with clarity where appropriate. Make it readable enough to present to the PayPay interview team
-* Complete your work in your own github repo and send the results to us and/or present them during your interview
+The app should now run on `http://localhost:3000` (It might take a while to start the servers)
 
-## What are we looking for? What does this prove?
-* Assumptions you make given limited requirements
-* Technology and design choices
-* Identify areas of your strengths
+## High level description of design and technologies used
+
+### Frontend
+
+- React (Typescript)
+- React Material (UI Framework)
+
+### Backend
+
+- Express (Typescript)
+- RxDB (DB Interface)
+- RxJS (Library for Reactive Programming)
+- leveldown (C++ Database)
+
+### Assumptions and Highlevel Description
+
+- When the app starts it will automatically fill few samples in the Database, thanks to this
+  the user will be able to "sign-in" from the main page of the app by choosing between 2 different kinds of users: "Admin" and "Employee"
+
+- The sign-in step doesn't require any kind of real authentication for sake of simplicity
+
+- Employees will be able to see the Home page and the Performance page, meanwhile Admins will have access also to the Employees page.
+
+- What you can do with this app is:
+
+  - Add new Employees
+  - Edit the Employees profile
+  - Remove employees
+  - Add Reviewer to each employee
+  - Access to the performance review page
+
+- What you can't do:
+  - Modify your performance review (Can be done only via the test utility)
+  - Write feedback to other employees (Can be done only via the test utility)
+
+### Database structure
+
+Because RxDB is document based, we fundamentally have 2 main collections:
+
+- Employee
+- Performance Review
+
+Each document will be one of the belows:
+
+```ts
+export interface Employee {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  birthday: string;
+  description: string;
+  pictureURI: string;
+  role: "admin" | "employee";
+}
+
+export interface Performance {
+  id: string;
+  revieweeId: string; // employeeId
+  reviewers: string[]; // employeeIds
+  feedbacks: {
+    [employeeId: string]: { description: string; value: number };
+  };
+  updatedAt?: number;
+  createdAt?: number;
+}
+```
+
+# How to run the API tests
+
+Make sure that the application is running in localhost. If not type the following command from the console:
+
+```sh
+npm run dev
+```
+
+and then
+
+```sh
+npm run test
+```
